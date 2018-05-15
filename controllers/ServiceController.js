@@ -45,6 +45,8 @@ module.exports=class ServiceController extends BaseController{
 
         let decryptData=await ctx.$wechatCryptoHandler.decryptMsg(msg_signature,timestamp,nonce,encryptData);
 
+        console.log('==明文数据==', decryptData);
+
         ctx.body='success';
 
         let configPath=ctx.$appConf.configPath || './config';
