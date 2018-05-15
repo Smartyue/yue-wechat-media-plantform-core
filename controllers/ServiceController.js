@@ -75,7 +75,7 @@ module.exports=class ServiceController extends BaseController{
             let { authorizer_refresh_token, authorizer_appid }=res.authorization_info;
 
             //get AuthorizerInfo
-            let AuthorizerInfo=await ctx.$wechatHandler.getAuthorizerInfo(ticket,authorizer_appid);
+            let AuthorizerInfo = await ctx.$wechatHandler.getAuthorizerInfo(configPath, ticket, authorizer_appid);
 
             //todo send to other server
 

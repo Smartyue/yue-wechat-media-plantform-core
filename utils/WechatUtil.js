@@ -35,8 +35,8 @@ module.exports=class WechatUtil{
     }
 
     //获取授权方信息
-    async getAuthorizerInfo(ticket,authorizer_appid) {
-        let {component_access_token} = await this.fetchAccessToken(ticket)
+    async getAuthorizerInfo(configPath, ticket, authorizer_appid) {
+        let {component_access_token} = await this.fetchAccessToken(ticket, configPath);
         let url = api.authorizer_info + component_access_token;
         let data = {
             "component_appid":this.appId,
