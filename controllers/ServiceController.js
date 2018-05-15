@@ -55,7 +55,8 @@ module.exports=class ServiceController extends BaseController{
         }
 
 
-        if(decryptData.xml.hasOwnProperty('ComponentVerifyTicket')){
+        //ticket 推送
+        if (decryptData.xml.InfoType == 'component_verify_ticket') {
             let ticket = decryptData.xml.ComponentVerifyTicket;
             ctx.logger.info(`==ticket:${ticket}==`);
             fs.writeFileSync(configPath+'/ticket.txt',ticket);
@@ -63,7 +64,9 @@ module.exports=class ServiceController extends BaseController{
             fs.writeFileSync(configPath+'/auth_url.txt',preCode);
         }
 
-        if(decryptData.xml.hasOwnProperty('AuthorizationCode')){
+
+        //授权成功
+        if (decryptData.xml.InfoType == 'authorized') {
             let auth_code=decryptData.xml.AuthorizationCode;
             let ticket=fs.readFileSync(configPath+'/ticket.txt','utf8');
             let res = await ctx.$wechatHandler.getAuthorizerToken(configPath, auth_code, ticket);
@@ -78,6 +81,18 @@ module.exports=class ServiceController extends BaseController{
             let method="post";
             let url=ctx.$appConf.authorizeInfoCBURL;
             await HttpUtil.instance.sendRequest(method,url,data,{});
+        }
+
+        //取消授权
+        if (decryptData.xml.InfoType == 'unauthorized') {
+            //获取取消授权者的appId
+            let appId = decryptData.xml.AuthorizerAppid;
+            //获取取消授权时间
+            let time = parseInt(decryptData.xml.CreateTime) * 1000;
+            let data = {appId, time};
+            let method = "post";
+            let url = ctx.$appConf.unauthorizeCBURL;
+            await HttpUtil.instance.sendRequest(method, url, data, {});
         }
 
         await next();
