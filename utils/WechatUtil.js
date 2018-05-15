@@ -37,11 +37,16 @@ module.exports=class WechatUtil{
     //获取授权方信息
     async getAuthorizerInfo(configPath, ticket, authorizer_appid) {
         let {component_access_token} = await this.fetchAccessToken(ticket, configPath);
+
+        console.log('==component_access_token====', component_access_token);
+
         let url = api.authorizer_info + component_access_token;
         let data = {
             "component_appid":this.appId,
             authorizer_appid
         }
+
+        console.log('===data===', data);
         return  await HttpUtil.instance.sendRequest('post', url, data, {});
     }
 
@@ -91,7 +96,7 @@ module.exports=class WechatUtil{
             return await this.updateComonentAccessToken(ticket,wechat_file);
 
 
-        let localAccessToken = fs.readFileSync(wechat_file);
+        let localAccessToken = fs.readFileSync(wechat_file, 'utf8');
 
         console.log("localAccessToken=========", localAccessToken);
 
@@ -105,7 +110,7 @@ module.exports=class WechatUtil{
             return await this.updateComonentAccessToken(ticket,wechat_file);
 
         } catch (e) {
-            console.error('Something Error:', JSON.stringify(e));
+            console.error('Something Error:', e);
             return await this.updateComonentAccessToken(ticket,wechat_file);
 
         }
