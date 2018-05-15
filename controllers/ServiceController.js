@@ -37,7 +37,6 @@ module.exports=class ServiceController extends BaseController{
         let msg_signature=ctx.query.msg_signature;
 
         let encryptData=await parsePostData(ctx);
-        ctx.logger.info(`==encryptData==`,encryptData);
 
         let decryptData=await ctx.$wechatCryptoHandler.decryptMsg(msg_signature,timestamp,nonce,encryptData);
 

@@ -103,7 +103,7 @@ module.exports=class WechatUtil{
             return await this.updateComonentAccessToken(ticket,wechat_file);
 
         } catch (e) {
-            console.error('Something Error:', e);
+            console.error('Something Error:', e.code);
             return await this.updateComonentAccessToken(ticket,wechat_file);
 
         }
