@@ -68,7 +68,7 @@ module.exports=class ServiceController extends BaseController{
         if(decryptData.xml.hasOwnProperty('AuthorizationCode')){
             let auth_code=decryptData.xml.AuthorizationCode;
             let ticket=fs.readFileSync(configPath+'/ticket.txt','utf8');
-            let res=await ctx.$wechatHandler.getAuthorizerToken(auth_code,ticket);
+            let res = await ctx.$wechatHandler.getAuthorizerToken(configPath, auth_code, ticket);
 
             console.log('====res authorization_info',res);
 

@@ -45,8 +45,8 @@ module.exports=class WechatUtil{
         return  await HttpUtil.instance.sendRequest('post', url, data, {});
     }
 
-    async getAuthorizerToken(auth_code,ticket){
-        let res = await this.fetchAccessToken(ticket)
+    async getAuthorizerToken(configPath, auth_code, ticket) {
+        let res = await this.fetchAccessToken(ticket, configPath)
         let url = api.authorizer_Token + res.component_access_token;
         let data = {
             "component_appid": this.appId,
