@@ -61,7 +61,7 @@ module.exports=class ServiceController extends BaseController{
             let ticket = decryptData.xml.ComponentVerifyTicket;
             ctx.logger.info(`==ticket:${ticket}==`);
             fs.writeFileSync(configPath+'/ticket.txt',ticket);
-            let preCode=ctx.$wechatHandler.getPreAuthCode(ticket,configPath);
+            let preCode = await ctx.$wechatHandler.getPreAuthCode(ticket, configPath);
             fs.writeFileSync(configPath+'/auth_url.txt',preCode);
         }
 
