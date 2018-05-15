@@ -1,0 +1,20 @@
+{
+  "name": "yue-wechat-media-plantform-core",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yue.",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.5.1",
+    "koa-body": "^2.5.0",
+    "koa-router": "^7.4.0",
+    "log4js": "^2.6.0",
+    "xml2js": "^0.4.19",
+    "yue-helper": "0.0.7",
+    "yue-http-util": "^1.0.2"
+  }
+}
