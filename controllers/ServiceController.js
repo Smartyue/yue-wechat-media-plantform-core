@@ -70,11 +70,8 @@ module.exports=class ServiceController extends BaseController{
             let ticket=fs.readFileSync(configPath+'/ticket.txt','utf8');
             let res = await ctx.$wechatHandler.getAuthorizerToken(configPath, auth_code, ticket);
 
-            console.log('====res authorization_info',res);
-
             let { authorizer_refresh_token, authorizer_appid }=res.authorization_info;
 
-            //get AuthorizerInfo
             let AuthorizerInfo = await ctx.$wechatHandler.getAuthorizerInfo(configPath, ticket, authorizer_appid);
 
             //todo send to other server
@@ -110,11 +107,34 @@ module.exports=class ServiceController extends BaseController{
         let authUrl='https://mp.weixin.qq.com/cgi-bin/componentloginpage?' +
             'component_appid=' + ctx.$appConf.wechatConf.appId +
             '&pre_auth_code=' + preCode +
-            '&redirect_uri=' + 'http://' + ctx.$appConf.host + ctx.$appConf.routeConf.authorizeCallbackUrl;
-        ctx.body={
-            code:200,
-            data:authUrl
-        };
+            '&redirect_uri=' + ctx.$appConf.host + ctx.$appConf.routeConf.authorizeCallbackUrl;
+        ctx.body = "<a href=\"" + authUrl + "\">点击进行网页扫码授权</a>";
+        await next();
+    }
+
+
+    /**
+     * 获取移动端授权链接
+     * @param ctx
+     * @param next
+     * @returns {Promise.<*>}
+     */
+    async getMobileAuthorizeUrl(ctx, next) {
+        let configPath = ctx.$appConf.configPath || './config';
+        let authUrlFile = configPath + '/auth_url.txt';
+        if (!fs.existsSync(authUrlFile)) {
+            ctx.body = {
+                code: 101,
+                message: 'No preCode generate!'
+            }
+            return await next();
+        }
+        let preCode = fs.readFileSync(authUrlFile, 'utf8');
+        let authUrl = 'https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&auth_type=3&no_scan=1&' +
+            'component_appid=' + ctx.$appConf.wechatConf.appId +
+            '&pre_auth_code=' + preCode +
+            '&redirect_uri=' + ctx.$appConf.host + ctx.$appConf.routeConf.authorizeCallbackUrl + '#wechat_redirect';
+        ctx.body = "<a href=\"" + authUrl + "\">点击进行移动端授权</a>";
         await next();
     }
 
@@ -128,7 +148,7 @@ module.exports=class ServiceController extends BaseController{
     async authorizeCallback(ctx,next){
         ctx.logger.info(`==授权回调==`);
         ctx.logger.info(`==params  authCode:${ctx.query.auth_code},expiresIn:${ctx.query.expires_in}==`);
-        ctx.body='success';
+        ctx.body = "<a href='http://www.yuanjianxin.com'>Welcome!</a>";
         await next();
     }
 
