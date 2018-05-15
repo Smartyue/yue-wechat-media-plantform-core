@@ -125,6 +125,30 @@ module.exports=class ServiceController extends BaseController{
     }
 
 
+    async getAuthorizeAPI(ctx, next) {
+
+        let configPath = ctx.$appConf.configPath || './config';
+        let authUrlFile = configPath + '/auth_url.txt';
+        if (!fs.existsSync(authUrlFile)) {
+            ctx.body = {
+                code: 101,
+                message: 'No preCode generate!'
+            }
+            return await next();
+        }
+        let preCode = fs.readFileSync(authUrlFile, 'utf8');
+        let authUrl = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?' +
+            'component_appid=' + ctx.$appConf.wechatConf.appId +
+            '&pre_auth_code=' + preCode +
+            '&redirect_uri=' + ctx.$appConf.host + ctx.$appConf.routeConf.authorizeCallbackUrl;
+        ctx.body = {
+            code: 200,
+            message: 'OK',
+            data: authUrl
+        };
+        await next();
+    }
+
     /**
      * 获取移动端授权链接
      * @param ctx
@@ -147,6 +171,29 @@ module.exports=class ServiceController extends BaseController{
             '&pre_auth_code=' + preCode +
             '&redirect_uri=' + ctx.$appConf.host + ctx.$appConf.routeConf.authorizeCallbackUrl + '#wechat_redirect';
         ctx.body = "<a href=\"" + authUrl + "\">点击进行移动端授权</a>";
+        await next();
+    }
+
+    async getMobileAuthorizeAPI(ctx, next) {
+        let configPath = ctx.$appConf.configPath || './config';
+        let authUrlFile = configPath + '/auth_url.txt';
+        if (!fs.existsSync(authUrlFile)) {
+            ctx.body = {
+                code: 101,
+                message: 'No preCode generate!'
+            }
+            return await next();
+        }
+        let preCode = fs.readFileSync(authUrlFile, 'utf8');
+        let authUrl = 'https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&auth_type=3&no_scan=1&' +
+            'component_appid=' + ctx.$appConf.wechatConf.appId +
+            '&pre_auth_code=' + preCode +
+            '&redirect_uri=' + ctx.$appConf.host + ctx.$appConf.routeConf.authorizeCallbackUrl + '#wechat_redirect';
+        ctx.body = {
+            code: 200,
+            message: 'OK',
+            data: authUrl
+        };
         await next();
     }
 
