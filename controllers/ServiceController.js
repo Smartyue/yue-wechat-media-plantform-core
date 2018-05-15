@@ -36,10 +36,6 @@ module.exports=class ServiceController extends BaseController{
         let nonce=ctx.query.nonce;
         let msg_signature=ctx.query.msg_signature;
 
-        ctx.logger.info(`==timestamp:${timestamp}==`);
-        ctx.logger.info(`==nonce:${nonce}==`);
-        ctx.logger.info(`==msg_signature:${msg_signature}==`);
-
         let encryptData=await parsePostData(ctx);
         ctx.logger.info(`==encryptData==`,encryptData);
 
