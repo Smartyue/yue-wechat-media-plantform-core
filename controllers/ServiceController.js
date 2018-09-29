@@ -70,13 +70,18 @@ module.exports=class ServiceController extends BaseController{
             let ticket=fs.readFileSync(configPath+'/ticket.txt','utf8');
             let res = await ctx.$wechatHandler.getAuthorizerToken(configPath, auth_code, ticket);
 
-            let { authorizer_refresh_token, authorizer_appid }=res.authorization_info;
+            let {authorizer_refresh_token, authorizer_appid, authorizer_access_token}=res.authorization_info;
 
             let AuthorizerInfo = await ctx.$wechatHandler.getAuthorizerInfo(configPath, ticket, authorizer_appid);
 
             //todo send to other server
 
-            let data={authorizer_refresh_token,authorizer_appid,authorizer_info:AuthorizerInfo.authorizer_info};
+            let data = {
+                authorizer_refresh_token,
+                authorizer_access_token,
+                authorizer_appid,
+                authorizer_info: AuthorizerInfo.authorizer_info
+            };
             let method="post";
             let url=ctx.$appConf.authorizeInfoCBURL;
             await HttpUtil.instance.sendRequest(method,url,data,{});
