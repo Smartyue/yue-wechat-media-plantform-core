@@ -77,6 +77,7 @@ module.exports=class ServiceController extends BaseController{
             //todo send to other server
 
             let data = {
+                authorization_code: auth_code,
                 authorizer_refresh_token,
                 authorizer_access_token,
                 authorizer_appid,
@@ -120,7 +121,9 @@ module.exports=class ServiceController extends BaseController{
             }
             return await next();
         }
-        let preCode=fs.readFileSync(authUrlFile,'utf8');
+        let ticket = fs.readFileSync(configPath + '/ticket.txt', 'utf8');
+        let preCode = await ctx.$wechatHandler.getPreAuthCode(ticket, configPath);
+        // let preCode=fs.readFileSync(authUrlFile,'utf8');
         let authUrl='https://mp.weixin.qq.com/cgi-bin/componentloginpage?' +
             'component_appid=' + ctx.$appConf.wechatConf.appId +
             '&pre_auth_code=' + preCode +
@@ -141,7 +144,9 @@ module.exports=class ServiceController extends BaseController{
             }
             return await next();
         }
-        let preCode = fs.readFileSync(authUrlFile, 'utf8');
+        let ticket = fs.readFileSync(configPath + '/ticket.txt', 'utf8');
+        let preCode = await ctx.$wechatHandler.getPreAuthCode(ticket, configPath);
+        // let preCode=fs.readFileSync(authUrlFile,'utf8');
         let authUrl = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?' +
             'component_appid=' + ctx.$appConf.wechatConf.appId +
             '&pre_auth_code=' + preCode +
@@ -170,7 +175,9 @@ module.exports=class ServiceController extends BaseController{
             }
             return await next();
         }
-        let preCode = fs.readFileSync(authUrlFile, 'utf8');
+        let ticket = fs.readFileSync(configPath + '/ticket.txt', 'utf8');
+        let preCode = await ctx.$wechatHandler.getPreAuthCode(ticket, configPath);
+        // let preCode=fs.readFileSync(authUrlFile,'utf8');
         let authUrl = 'https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&auth_type=3&no_scan=1&' +
             'component_appid=' + ctx.$appConf.wechatConf.appId +
             '&pre_auth_code=' + preCode +
@@ -189,7 +196,9 @@ module.exports=class ServiceController extends BaseController{
             }
             return await next();
         }
-        let preCode = fs.readFileSync(authUrlFile, 'utf8');
+        let ticket = fs.readFileSync(configPath + '/ticket.txt', 'utf8');
+        let preCode = await ctx.$wechatHandler.getPreAuthCode(ticket, configPath);
+        // let preCode=fs.readFileSync(authUrlFile,'utf8');
         let authUrl = 'https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&auth_type=3&no_scan=1&' +
             'component_appid=' + ctx.$appConf.wechatConf.appId +
             '&pre_auth_code=' + preCode +
